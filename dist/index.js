@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 const server = createServer(app);
 const io = new Server(server, {
+    connectionStateRecovery: {},
     cors: {
         origin: '*' //this is to allow the client running on different port access the socket server
     }
@@ -20,9 +21,10 @@ const io = new Server(server, {
  * Basically 'connection' is a predefined event of socket.io
  */
 io.on('connection', (socket) => {
-    // socket.on('chat message',(mssg)=>{
-    //     console.log('message:' + mssg);
-    // });
+    socket.on('chat message', (mssg) => {
+        console.log('message:' + mssg);
+        io.emit('chat message', mssg);
+    });
     console.log("hi there, i am server there");
 });
 server.listen(PORT, () => {

@@ -16,6 +16,7 @@ app.use(cors());
 
 const server=createServer(app);
 const io=new Server(server,{ /** here we are doing the integration, basically making our http express server a socket server. And actually running the socket server, so it can listen to any requests */
+connectionStateRecovery: {},
     cors:{
         origin:'*' //this is to allow the client running on different port access the socket server
     }
@@ -25,9 +26,10 @@ const io=new Server(server,{ /** here we are doing the integration, basically ma
  * Basically 'connection' is a predefined event of socket.io
  */
 io.on('connection',(socket)=>{ //this connection gets triggered whenever a client gets connected to the socket server.(this event is used for server side)
-    // socket.on('chat message',(mssg)=>{
-    //     console.log('message:' + mssg);
-    // });
+    socket.on('chat message',(mssg)=>{
+        console.log('message:' + mssg);
+        io.emit('chat message', mssg);
+    });
     console.log("hi there, i am server there");
     
     
